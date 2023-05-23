@@ -10,6 +10,7 @@
         },
 
         _create: function(){
+            this.doneTypingInterval = 900;
             this._createUI();
             this._bindEvents();
         },
@@ -32,12 +33,11 @@
             let self = this;
 
             this.$input.on('keyup', function(event){
-                setTimeout(1000);
-                let searchTerm = `?query=${$(this).val()}&limit=10`;
-                self._search(searchTerm);
-                if (event.keyCode === 13) {
-                    
-                }
+                let searchTerm = `?query=${self.$input.val()}&limit=10`;
+                clearTimeout(self.typingTimer);
+                self.typingTimer = setTimeout(function(){
+                    self._search(searchTerm);
+                }, self.doneTypingInterval)
             });
 
             this.$resultsList.on('click', 'li', function(){
